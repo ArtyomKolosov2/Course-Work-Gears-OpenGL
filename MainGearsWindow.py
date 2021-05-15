@@ -80,8 +80,18 @@ class MainWindow(QMainWindow):
         ySlider.slider.setValue(345 * 16)
         zSlider.slider.setValue(0 * 16)
 
-        self.setWindowTitle("Grabber")
+        self.setWindowTitle("GEARS")
         self.resize(800, 700)
+
+        text = """<p style="font-size:18px;"><b>Факультет информационных технологий и робототехники
+        <br/>Кафедра программного обеспечения информационных систем и технологий</b>
+        <br/><br/><center>КУРСОВАЯ РАБОТА</center><br/>
+        По дисциплине «Разработка приложений в визуальных средах»
+        <br/><b>Тема: «Симуляция движения шестерён»</b><br/>                                                                                                     
+        Исполнитель: студент гр. 10701219 Колосов А.А.</p>
+        """
+
+        QMessageBox.information(self, "Greetings!", text, QMessageBox.Ok)
 
     def createNewGear(self):
         reflectance1 = (0.8, 0.1, 0.0, 1.0)
@@ -170,6 +180,36 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    style = """ QLineEdit:hover{border-radius:4px;
+                                border-color:rgb(0,128,0);
+                                background-color:rgb(220,220,220);}
+                                QLineEdit{background: white;
+                                font:11px Arial;
+                                border: 2px solid grey;
+                                border-radius:4px;}
+                                QMainWindow{background-color: rgb(235, 237, 235);}   
+                QPushButton{
+                                border-radius: 5px;
+                                border: 2px solid black;
+                                background: white;;
+                                font: 13px Arial italic;
+                                }
+                                QPushButton:hover{
+                                border-radius: 5px;
+                                border-color: rgb(0,128,0);
+                                background-color: rgb(210,210,210)}
+                                QPushButton:pressed{
+                                border-radius: 5px;
+                                border-color: rgb(0,128,0);
+                                background-color: rgb(240,240,240);
+                                }
+                        QGroupBox{
+                        border: 2px solid green;
+                        }
+                                """
+
     mainWin = MainWindow()
+
+    mainWin.setStyleSheet(style)
     mainWin.show()
     sys.exit(app.exec_())

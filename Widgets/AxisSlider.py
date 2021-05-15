@@ -1,13 +1,13 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QSlider, QLabel, QHBoxLayout, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QSlider, QLabel, QHBoxLayout, QVBoxLayout, QWidget, QGroupBox
 
 
 class QString(object):
     pass
 
 
-class AxisSlider(QWidget):
+class AxisSlider(QGroupBox):
 
     def __init__(self, axisName: str):
         super().__init__()
