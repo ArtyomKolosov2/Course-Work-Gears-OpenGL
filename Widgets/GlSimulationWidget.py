@@ -54,8 +54,7 @@ class GLWidget(QOpenGLWidget):
     def initializeGL(self):
         lightPos = (5.0, 5.0, 10.0, 1.0)
         reflectance1 = (0.8, 0.1, 0.0, 1.0)
-        reflectance2 = (0.0, 0.8, 0.2, 1.0)
-        reflectance3 = (0.2, 0.2, 1.0, 1.0)
+
 
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, lightPos)
         gl.glEnable(gl.GL_LIGHTING)
@@ -63,8 +62,6 @@ class GLWidget(QOpenGLWidget):
         gl.glEnable(gl.GL_DEPTH_TEST)
 
         self.gears.append(GearMaker.makeGear(reflectance1, 1.0, 4.0, 1.0, 1.0, 20))
-        self.gears.append(GearMaker.makeGear(reflectance2, 0.5, 2.0, 2.0, 0.7, 10))
-        self.gears.append(GearMaker.makeGear(reflectance3, 1.3, 2.0, 0.5, 0.7, 10))
 
         gl.glEnable(gl.GL_NORMALIZE)
         gl.glClearColor(0.0, 0.0, 0.0, 1.0)
@@ -78,7 +75,9 @@ class GLWidget(QOpenGLWidget):
         gl.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
 
         for gear in self.gears:
-            self.drawGear(gear, -3.0, -2.0, 0.0, self.gear1Rot / 16.0)
+            self.drawGear(gear.points, gear.dx, gear.dy, gear.dz, self.gear1Rot / 16.0)
+            if gear.outputAngle > 0:
+                gl.glRotated(+gear.outputAngle, gear.dx, gear.dy, gear.dz)
 
         #self.drawGear(self.gear1, )
         #self.drawGear(self.gear2, +3.1, -2.0, 0.0,

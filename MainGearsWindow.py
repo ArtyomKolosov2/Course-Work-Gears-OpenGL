@@ -87,12 +87,29 @@ class MainWindow(QMainWindow):
         reflectance1 = (0.8, 0.1, 0.0, 1.0)
 
         try:
-            self.glWidget.gears.append(
-                GearMaker.makeGear(reflectance1, 1.0, 4.0, 4.0, 1.0, int(self.paramsInput.toothAmount_lineEdit.text())))
+            toothAmount = int(self.paramsInput.toothAmount_lineEdit.text())
+            if toothAmount < 5:
+                raise Exception("Tooth amount lower than 5!")
+
+            gear = GearMaker.makeGear(
+                    reflectance1,
+                    float(self.paramsInput.innerRadius_lineEdit.text()),
+                    float(self.paramsInput.outerRadius_lineEdit.text()),
+                    float(self.paramsInput.width_lineEdit.text()),
+                    1.0,
+                    toothAmount)
+
+            gear.dx = float(self.paramsInput.dx_lineEdit.text())
+            gear.dy = float(self.paramsInput.dy_lineEdit.text())
+            gear.dz = float(self.paramsInput.dz_lineEdit.text())
+            gear.outputAngle = float(self.paramsInput.angle_lineEdit.text())
+
+            self.glWidget.gears.append(gear)
+
             self.update()
-        except Exception:
-            errorBox = QErrorMessage()
-            errorBox.showMessage("Invalid data!")
+
+        except Exception as ex:
+            QMessageBox.critical(self, "Ошибка ", str(ex), QMessageBox.Ok)
 
     def deleteLastGear(self):
         if len(self.glWidget.gears) > 0:

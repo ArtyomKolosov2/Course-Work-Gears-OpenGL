@@ -1,11 +1,15 @@
 import math
 import OpenGL.GL as gl
 
+from Models.Gear import Gear
+
 
 class GearMaker:
 
     @staticmethod
     def makeGear(reflectance, innerRadius, outerRadius, thickness, toothSize, toothCount):
+        gear = Gear(reflectance, innerRadius, outerRadius, thickness, toothSize, toothCount)
+
         result_list = gl.glGenLists(1)
         gl.glNewList(result_list, gl.GL_COMPILE)
         gl.glMaterialfv(gl.GL_FRONT, gl.GL_AMBIENT_AND_DIFFUSE,
@@ -87,4 +91,6 @@ class GearMaker:
 
         gl.glEndList()
 
-        return result_list
+        gear.points = result_list
+
+        return gear
