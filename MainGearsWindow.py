@@ -1,3 +1,4 @@
+import os
 import sys
 
 from PyQt5.QtCore import QSize, Qt
@@ -120,9 +121,7 @@ class MainWindow(QMainWindow):
             self.update()
 
     def about(self):
-        QMessageBox.about(self, "About Grabber",
-                          "The <b>Grabber</b> example demonstrates two approaches for "
-                          "rendering OpenGL into a Qt pixmap.")
+        os.system("Helper.chm")
 
     def createActions(self):
 

@@ -55,7 +55,6 @@ class GLWidget(QOpenGLWidget):
         lightPos = (5.0, 5.0, 10.0, 1.0)
         reflectance1 = (0.8, 0.1, 0.0, 1.0)
 
-
         gl.glLightfv(gl.GL_LIGHT0, gl.GL_POSITION, lightPos)
         gl.glEnable(gl.GL_LIGHTING)
         gl.glEnable(gl.GL_LIGHT0)
@@ -78,14 +77,6 @@ class GLWidget(QOpenGLWidget):
             self.drawGear(gear.points, gear.dx, gear.dy, gear.dz, self.gear1Rot / 16.0)
             if gear.outputAngle > 0:
                 gl.glRotated(+gear.outputAngle, gear.dx, gear.dy, gear.dz)
-
-        #self.drawGear(self.gear1, )
-        #self.drawGear(self.gear2, +3.1, -2.0, 0.0,
-         #             -2.0 * (self.gear1Rot / 16.0) - 9.0)
-
-        #gl.glRotated(+90.0, 1.0, 0.0, 0.0)
-        #self.drawGear(self.gear3, -3.1, -1.8, -2.2,
-         #             +2.0 * (self.gear1Rot / 16.0) - 2.0)
 
         gl.glPopMatrix()
 
