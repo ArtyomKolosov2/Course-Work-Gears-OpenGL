@@ -1,4 +1,3 @@
-
 import OpenGL.GL as gl
 from PyQt5.QtCore import pyqtSignal, Qt, QTimer
 from PyQt5.QtWidgets import (QOpenGLWidget)
@@ -13,6 +12,8 @@ class GLWidget(QOpenGLWidget):
 
     def __init__(self, parent=None):
         super(GLWidget, self).__init__(parent)
+
+        self.gears = []
 
         self.gear1 = 0
         self.gear2 = 0
@@ -61,9 +62,9 @@ class GLWidget(QOpenGLWidget):
         gl.glEnable(gl.GL_LIGHT0)
         gl.glEnable(gl.GL_DEPTH_TEST)
 
-        self.gear1 = GearMaker.makeGear(gl, reflectance1, 1.0, 4.0, 1.0, 1.0, 20)
-        self.gear2 = GearMaker.makeGear(gl, reflectance2, 0.5, 2.0, 2.0, 0.7, 10)
-        self.gear3 = GearMaker.makeGear(gl, reflectance3, 1.3, 2.0, 0.5, 0.7, 10)
+        self.gears.append(GearMaker.makeGear(reflectance1, 1.0, 4.0, 1.0, 1.0, 20))
+        self.gears.append(GearMaker.makeGear(reflectance2, 0.5, 2.0, 2.0, 0.7, 10))
+        self.gears.append(GearMaker.makeGear(reflectance3, 1.3, 2.0, 0.5, 0.7, 10))
 
         gl.glEnable(gl.GL_NORMALIZE)
         gl.glClearColor(0.0, 0.0, 0.0, 1.0)
@@ -76,13 +77,16 @@ class GLWidget(QOpenGLWidget):
         gl.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
         gl.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
 
-        self.drawGear(self.gear1, -3.0, -2.0, 0.0, self.gear1Rot / 16.0)
-        self.drawGear(self.gear2, +3.1, -2.0, 0.0,
-                      -2.0 * (self.gear1Rot / 16.0) - 9.0)
+        for gear in self.gears:
+            self.drawGear(gear, -3.0, -2.0, 0.0, self.gear1Rot / 16.0)
 
-        gl.glRotated(+90.0, 1.0, 0.0, 0.0)
-        self.drawGear(self.gear3, -3.1, -1.8, -2.2,
-                      +2.0 * (self.gear1Rot / 16.0) - 2.0)
+        #self.drawGear(self.gear1, )
+        #self.drawGear(self.gear2, +3.1, -2.0, 0.0,
+         #             -2.0 * (self.gear1Rot / 16.0) - 9.0)
+
+        #gl.glRotated(+90.0, 1.0, 0.0, 0.0)
+        #self.drawGear(self.gear3, -3.1, -1.8, -2.2,
+         #             +2.0 * (self.gear1Rot / 16.0) - 2.0)
 
         gl.glPopMatrix()
 
@@ -129,16 +133,18 @@ class GLWidget(QOpenGLWidget):
     def zRotation(self):
         return self.zRot
 
-    def drawGear(self, gear, dx, dy, dz, angle):
+    @staticmethod
+    def drawGear(gear, dx, dy, dz, angle):
         gl.glPushMatrix()
         gl.glTranslated(dx, dy, dz)
         gl.glRotated(angle, 0.0, 0.0, 1.0)
         gl.glCallList(gear)
         gl.glPopMatrix()
 
-    def normalizeAngle(self, angle):
-        while (angle < 0):
+    @staticmethod
+    def normalizeAngle(angle):
+        while angle < 0:
             angle += 360 * 16
 
-        while (angle > 360 * 16):
+        while angle > 360 * 16:
             angle -= 360 * 16

@@ -3,9 +3,12 @@ import sys
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import (QAction, QApplication, QLabel,
                              QMainWindow, QMessageBox, QScrollArea,
-                             QSizePolicy, QSlider, QWidget, QHBoxLayout)
+                             QSizePolicy, QSlider, QWidget, QHBoxLayout, QVBoxLayout, QErrorMessage)
 
+from Modules.GearMaker import GearMaker
+from Widgets.GearParamsInput import GearParamsInput
 from Widgets.GlSimulationWidget import GLWidget
+from Widgets.AxisSlider import AxisSlider
 
 
 class MainWindow(QMainWindow):
@@ -33,22 +36,22 @@ class MainWindow(QMainWindow):
         #      QSizePolicy.Ignored)
         # self.pixmapLabelArea.setMinimumSize(50, 50)
 
-        xSlider = self.createSlider(self.glWidget.xRotationChanged,
-                                    self.glWidget.setXRotation)
-        ySlider = self.createSlider(self.glWidget.yRotationChanged,
-                                    self.glWidget.setYRotation)
-        zSlider = self.createSlider(self.glWidget.zRotationChanged,
-                                    self.glWidget.setZRotation)
+        xSlider = AxisSlider.createSlider(self.glWidget.xRotationChanged,
+                                          self.glWidget.setXRotation, "x")
+        ySlider = AxisSlider.createSlider(self.glWidget.yRotationChanged,
+                                          self.glWidget.setYRotation, "y")
+        zSlider = AxisSlider.createSlider(self.glWidget.zRotationChanged,
+                                          self.glWidget.setZRotation, "z")
 
         self.createActions()
         self.createMenus()
 
-        centralLayout = QHBoxLayout()
+        centralWidgetLayout = QHBoxLayout()
 
         hbox1 = QHBoxLayout()
         hbox1.addWidget(self.glWidgetArea)
 
-        hbox2 = QHBoxLayout()
+        hbox2 = QVBoxLayout()
         # centralLayout.addWidget(self.pixmapLabelArea, 0, 1)
 
         hbox2.addSpacing(2)
@@ -59,17 +62,42 @@ class MainWindow(QMainWindow):
         hbox2.addWidget(zSlider)
         hbox2.addSpacing(2)
 
-        centralLayout.addLayout(hbox1)
-        centralLayout.addLayout(hbox2)
+        centralWidgetLayout.addLayout(hbox1)
+        centralWidgetLayout.addLayout(hbox2)
 
-        centralWidget.setLayout(centralLayout)
+        verticalLayout = QVBoxLayout()
+        verticalLayout.addLayout(centralWidgetLayout)
 
-        xSlider.setValue(15 * 16)
-        ySlider.setValue(345 * 16)
-        zSlider.setValue(0 * 16)
+        self.paramsInput = GearParamsInput()
+        self.paramsInput.createPushButton.clicked.connect(self.createNewGear)
+        self.paramsInput.deleteLastGearPushButton.clicked.connect(self.deleteLastGear)
+
+        verticalLayout.addWidget(self.paramsInput)
+
+        centralWidget.setLayout(verticalLayout)
+
+        xSlider.slider.setValue(15 * 16)
+        ySlider.slider.setValue(345 * 16)
+        zSlider.slider.setValue(0 * 16)
 
         self.setWindowTitle("Grabber")
         self.resize(800, 700)
+
+    def createNewGear(self):
+        reflectance1 = (0.8, 0.1, 0.0, 1.0)
+
+        try:
+            self.glWidget.gears.append(
+                GearMaker.makeGear(reflectance1, 1.0, 4.0, 4.0, 1.0, int(self.paramsInput.toothAmount_lineEdit.text())))
+            self.update()
+        except Exception:
+            errorBox = QErrorMessage()
+            errorBox.showMessage("Invalid data!")
+
+    def deleteLastGear(self):
+        if len(self.glWidget.gears) > 0:
+            self.glWidget.gears.pop()
+            self.update()
 
     def grabFrameBuffer(self):
         pass
@@ -112,19 +140,6 @@ class MainWindow(QMainWindow):
         self.helpMenu = self.menuBar().addMenu("&Help")
         self.helpMenu.addAction(self.aboutAct)
         self.helpMenu.addAction(self.aboutQtAct)
-
-    def createSlider(self, changedSignal, setterSlot):
-        slider = QSlider(Qt.Vertical)
-        slider.setRange(0, 360 * 16)
-        slider.setSingleStep(16)
-        slider.setPageStep(15 * 16)
-        slider.setTickInterval(15 * 16)
-        slider.setTickPosition(QSlider.TicksRight)
-        slider.setStyleSheet("margin: 5px; border: 2px solid black; ")
-        slider.valueChanged.connect(setterSlot)
-        changedSignal.connect(slider.setValue)
-
-        return slider
 
     def setPixmap(self, pixmap):
         self.pixmapLabel.setPixmap(pixmap)
