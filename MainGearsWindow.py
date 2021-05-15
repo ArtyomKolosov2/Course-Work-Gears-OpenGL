@@ -3,7 +3,7 @@ import sys
 from PyQt5.QtCore import QSize, Qt
 from PyQt5.QtWidgets import (QAction, QApplication, QLabel,
                              QMainWindow, QMessageBox, QScrollArea,
-                             QSizePolicy, QSlider, QWidget, QHBoxLayout, QVBoxLayout, QErrorMessage)
+                             QSizePolicy, QWidget, QHBoxLayout, QVBoxLayout)
 
 from Modules.GearMaker import GearMaker
 from Widgets.GearParamsInput import GearParamsInput
@@ -30,12 +30,6 @@ class MainWindow(QMainWindow):
                                         QSizePolicy.Ignored)
         self.glWidgetArea.setMinimumSize(50, 50)
 
-        # self.pixmapLabelArea = QScrollArea()
-        # self.pixmapLabelArea.setWidget(self.pixmapLabel)
-        # self.pixmapLabelArea.setSizePolicy(QSizePolicy.Ignored,
-        #      QSizePolicy.Ignored)
-        # self.pixmapLabelArea.setMinimumSize(50, 50)
-
         xSlider = AxisSlider.createSlider(self.glWidget.xRotationChanged,
                                           self.glWidget.setXRotation, "x")
         ySlider = AxisSlider.createSlider(self.glWidget.yRotationChanged,
@@ -52,7 +46,6 @@ class MainWindow(QMainWindow):
         hbox1.addWidget(self.glWidgetArea)
 
         hbox2 = QVBoxLayout()
-        # centralLayout.addWidget(self.pixmapLabelArea, 0, 1)
 
         hbox2.addSpacing(2)
         hbox2.addWidget(xSlider)
@@ -126,28 +119,12 @@ class MainWindow(QMainWindow):
             self.glWidget.gears.pop()
             self.update()
 
-    def grabFrameBuffer(self):
-        pass
-
-    # image = self.glWidget.grabFramebuffer()
-    # self.setPixmap(QPixmap.fromImage(image))
-
-    def clearPixmap(self):
-        pass
-
-    # self.setPixmap(QPixmap())
-
     def about(self):
         QMessageBox.about(self, "About Grabber",
                           "The <b>Grabber</b> example demonstrates two approaches for "
                           "rendering OpenGL into a Qt pixmap.")
 
     def createActions(self):
-        self.grabFrameBufferAct = QAction("&Grab Frame Buffer", self,
-                                          shortcut="Ctrl+G", triggered=self.grabFrameBuffer)
-
-        self.clearPixmapAct = QAction("&Clear Pixmap", self,
-                                      shortcut="Ctrl+L", triggered=self.clearPixmap)
 
         self.exitAct = QAction("E&xit", self, shortcut="Ctrl+Q",
                                triggered=self.close)
@@ -159,8 +136,6 @@ class MainWindow(QMainWindow):
 
     def createMenus(self):
         self.fileMenu = self.menuBar().addMenu("&File")
-        self.fileMenu.addAction(self.grabFrameBufferAct)
-        self.fileMenu.addAction(self.clearPixmapAct)
         self.fileMenu.addSeparator()
         self.fileMenu.addAction(self.exitAct)
 
@@ -206,7 +181,7 @@ if __name__ == '__main__':
                         QGroupBox{
                         border: 2px solid green;
                         }
-                                """
+                        """
 
     mainWin = MainWindow()
 
