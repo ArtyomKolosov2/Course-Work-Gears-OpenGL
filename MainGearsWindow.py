@@ -76,14 +76,16 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("GEARS")
         self.resize(800, 700)
+        self.showInfo()
 
+    def showInfo(self):
         text = """<p style="font-size:18px;"><b>Факультет информационных технологий и робототехники
-        <br/>Кафедра программного обеспечения информационных систем и технологий</b>
-        <br/><br/><center>КУРСОВАЯ РАБОТА</center><br/>
-        По дисциплине «Разработка приложений в визуальных средах»
-        <br/><b>Тема: «Симуляция движения шестерён»</b><br/>                                                                                                     
-        Исполнитель: студент гр. 10701219 Колосов А.А.</p>
-        """
+                <br/>Кафедра программного обеспечения информационных систем и технологий</b>
+                <br/><br/><center>КУРСОВАЯ РАБОТА</center><br/>
+                По дисциплине «Разработка приложений в визуальных средах»
+                <br/><b>Тема: «Симуляция движения шестерён»</b><br/>                                                                                                     
+                Исполнитель: студент гр. 10701219 Колосов А.А.</p>
+                """
 
         QMessageBox.information(self, "Greetings!", text, QMessageBox.Ok)
 
@@ -92,14 +94,31 @@ class MainWindow(QMainWindow):
 
         try:
             toothAmount = int(self.paramsInput.toothAmount_lineEdit.text())
+            innerRadius = float(self.paramsInput.innerRadius_lineEdit.text())
+            outerRadius = float(self.paramsInput.outerRadius_lineEdit.text())
+            width = float(self.paramsInput.width_lineEdit.text())
             if toothAmount < 5:
                 raise Exception("Tooth amount lower than 5!")
 
+            if innerRadius <= 0:
+                raise Exception("Inner radius must be greater than zero!")
+
+            if outerRadius <= 0:
+                raise Exception("Outer radius must be greater than zero!")
+
+            if width <= 0:
+                raise Exception("Width  must be greater than zero!")
+
+            if innerRadius > outerRadius:
+                raise Exception("Inner radius must be lower than outer!")
+
+
+
             gear = GearMaker.makeGear(
                     reflectance1,
-                    float(self.paramsInput.innerRadius_lineEdit.text()),
-                    float(self.paramsInput.outerRadius_lineEdit.text()),
-                    float(self.paramsInput.width_lineEdit.text()),
+                    innerRadius,
+                    outerRadius,
+                    width,
                     1.0,
                     toothAmount)
 
@@ -107,7 +126,6 @@ class MainWindow(QMainWindow):
             gear.dy = float(self.paramsInput.dy_lineEdit.text())
             gear.dz = float(self.paramsInput.dz_lineEdit.text())
             gear.outputAngle = float(self.paramsInput.angle_lineEdit.text())
-
             self.glWidget.gears.append(gear)
 
             self.update()
@@ -128,7 +146,9 @@ class MainWindow(QMainWindow):
         self.exitAct = QAction("E&xit", self, shortcut="Ctrl+Q",
                                triggered=self.close)
 
-        self.aboutAct = QAction("&About", self, triggered=self.about)
+        self.aboutAct = QAction("&Help", self, triggered=self.about)
+
+        self.helpAct = QAction("&About", self, triggered=self.showInfo)
 
         self.aboutQtAct = QAction("About &Qt", self,
                                   triggered=QApplication.instance().aboutQt)
@@ -140,6 +160,7 @@ class MainWindow(QMainWindow):
 
         self.helpMenu = self.menuBar().addMenu("&Help")
         self.helpMenu.addAction(self.aboutAct)
+        self.helpMenu.addAction(self.helpAct)
         self.helpMenu.addAction(self.aboutQtAct)
 
     def setPixmap(self, pixmap):

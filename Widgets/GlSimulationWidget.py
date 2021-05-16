@@ -76,7 +76,7 @@ class GLWidget(QOpenGLWidget):
         for gear in self.gears:
             self.drawGear(gear.points, gear.dx, gear.dy, gear.dz, self.gear1Rot / 16.0)
             if gear.outputAngle > 0:
-                gl.glRotated(+gear.outputAngle, gear.dx, gear.dy, gear.dz)
+                gl.glRotated(+gear.outputAngle,  1.0, 1.0, 0.0)
 
         gl.glPopMatrix()
 

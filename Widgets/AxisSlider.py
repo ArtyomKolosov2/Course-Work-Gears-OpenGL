@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QSlider, QLabel, QHBoxLayout, QVBoxLayout, QWidget, QGroupBox
+from PyQt5.QtWidgets import QSlider, QLabel, QHBoxLayout, QVBoxLayout, QGroupBox
 
 
 class AxisSlider(QGroupBox):
@@ -30,7 +30,7 @@ class AxisSlider(QGroupBox):
         self.setLayout(vbox)
 
     def valueChangedEvent(self, value):
-        self.textLabel.setText(str(value))
+        self.textLabel.setText(str(value // 16))
         self.update()
 
     @staticmethod
